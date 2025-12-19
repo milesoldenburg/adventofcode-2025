@@ -29,10 +29,18 @@ class Grid:
             for columni, column in enumerate(row):
                 yield (rowi, columni, column)
 
+    def walk_row(self, rowi):
+        for columni, column in enumerate(self.grid[rowi]):
+            yield (rowi, columni, column)
+
     def adjacencies(self, rowi, columni):
         adjacencies = {}
         for direction in Direction:
-            adjacencies[direction] = self.get(rowi, columni, direction=direction)
+            cell = self.get(rowi, columni, direction=direction)
+            if cell:
+                adjacencies[direction] = cell[2]
+            else:
+                adjacencies[direction] = None
         return adjacencies
 
     def get(self, rowi, columni, direction=None):
@@ -77,7 +85,10 @@ class Grid:
             else:
                 return None
         else:
-            return self.grid[rowi][columni]
+            return rowi, columni, self.grid[rowi][columni]
+
+    def set(self, rowi, columni, value):
+        self.grid[rowi][columni] = value
 
     def print(self):
         for row in self.grid:
